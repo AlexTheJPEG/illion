@@ -1,25 +1,22 @@
 use std::io;
 
-macro_rules! log_of {
-    ($val:expr, $base:expr, $type:ty) => {
-        ($val as f32).log($base) as $type
-    }
-}
-
 fn get_illion(num: u32) -> String {
     let mut illion = String::new(); 
     let base_prefixes: [&str; 10] = ["", "m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non"];
 
     let unit_prefixes: [&str; 10] = ["", "un", "duo", "tre", "quattuor", "quin", "se", "septe", "octo", "nove"];
-    let tens_prefixes: [&str; 10] = ["", "dec", "vigint", "trigint", "quadragint", "quinquagint", "sexagint", "septuagint", "octogint", "nonagint"];
+    let ten_prefixes: [&str; 10] = ["", "dec", "vigint", "trigint", "quadragint", "quinquagint", "sexagint", "septuagint", "octogint", "nonagint"];
+    let hundred_prefixes: [&str; 10] = ["", "cent", "ducent", "trecent", "quadringent", "quingent", "sescent", "septingent", "octingent", "nongent"];
 
     match num {
        1..=9 => {
         illion.push_str(base_prefixes[num as usize]);
        },
        10..=99 => {
-        let unit: u32 = num % 10;
         let ten: u32 = num / 10;
+        let unit: u32 = num % 10;
+
+        let ten_prefix: String = String::from(ten_prefixes[(num / 10) as usize]);
 
         let mut unit_prefix: String = String::from(unit_prefixes[unit as usize]);
         match unit {
@@ -39,7 +36,28 @@ fn get_illion(num: u32) -> String {
         }
 
         illion.push_str(&unit_prefix);
-        illion.push_str(tens_prefixes[(num / 10) as usize]);
+        illion.push_str(&ten_prefix);
+       },
+       100..=999 => {
+        let hundred: u32 = num / 100;
+        let ten: u32 = num / 10 % 10;
+        let unit: u32 = num % 10;
+
+        let hundred_prefix: String = String::from(hundred_prefixes[hundred as usize]);
+
+        let mut ten_prefix: String = String::from(ten_prefixes[ten as usize]);
+        if ten != 0 {
+            ten_prefix.push_str(if ten == 1 || ten == 2 { "i" } else { "a" });
+        } 
+
+        let mut unit_prefix: String = String::from(unit_prefixes[unit as usize]);
+        unit_prefix.push_str(if unit == 6 { "x" } else { "" });
+        unit_prefix.push_str(if unit == 7 { "n" } else { "" });
+        unit_prefix.push_str(if unit == 9 { "m" } else { "" });
+
+        illion.push_str(&unit_prefix);
+        illion.push_str(&ten_prefix);
+        illion.push_str(&hundred_prefix);
        },
        _ => (), 
     };
