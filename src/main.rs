@@ -11,6 +11,7 @@ fn get_illion(num: u32) -> String {
     match num {
        1..=9 => {
         illion.push_str(base_prefixes[num as usize]);
+        illion.push_str("illion");
        },
        10..=99 => {
         let ten: u32 = num / 10;
@@ -37,6 +38,7 @@ fn get_illion(num: u32) -> String {
 
         illion.push_str(&unit_prefix);
         illion.push_str(&ten_prefix);
+        illion.push_str("illion");
        },
        100..=999 => {
         let hundred: u32 = num / 100;
@@ -58,11 +60,25 @@ fn get_illion(num: u32) -> String {
         illion.push_str(&unit_prefix);
         illion.push_str(&ten_prefix);
         illion.push_str(&hundred_prefix);
+        illion.push_str("illion");
+       },
+       1000..=999_999 => {
+        let mill: u32 = num / 1000;
+        let rest: u32 = num % 1000;
+
+        let mut mill_prefix: String = get_illion(mill);
+        mill_prefix = String::from(mill_prefix.strip_suffix("on").unwrap());
+        illion.push_str(&mill_prefix);
+
+        if rest == 0 {
+            illion.push_str("llion");
+        } else {
+            illion.push_str("-");
+            illion.push_str(&get_illion(rest));
+        }
        },
        _ => (), 
     };
-
-    illion.push_str("illion");
 
     illion
 }
