@@ -58,7 +58,8 @@ fn separate_into_chunks(num: String) -> Vec<String> {
 
 fn get_chunk_tier_two_prefix(chunk: String, index: usize) -> String {
     let base_prefixes: [&str; 10] = ["", "", "du", "tre", "quadri", "quinti", "sexti", "septi", "octi", "noni"];
-    let unit_prefixes: [&str; 10] = ["", "milli", "micro", "nano", "pico", "femto", "atto", "zepto", "yocto", "xono"];
+    let unit_prefixes: [&str; 20] = ["", "milli", "micro", "nano", "pico", "femto", "atto", "zepto", "yocto", "xono",
+                                     "veco", "meco", "dueco", "treco", "tetreco", "penteco", "hexeco", "hepteco", "octeco", "enneco"];
 
     let chunk_prefix: String;
     let chunk_value: u32 = chunk.parse().unwrap();
@@ -103,7 +104,7 @@ fn get_illion(num: String) -> String {
         return format!("{}llion", get_common_prefix(num));
     } else if biguint_in_range(&big_num, "10", "999") {
         return format!("{}illion", get_hundreds_prefix(num, false));
-    } else if biguint_in_range(&big_num, "1000", &"9".repeat(30)){
+    } else if biguint_in_range(&big_num, "1000", &"9".repeat(60)){
         return format!("{}illion", get_entire_tier_two_prefix(num, false));
     }
 
