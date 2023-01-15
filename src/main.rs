@@ -73,7 +73,7 @@ fn get_chunk_tier_two_prefix(chunk: String, index: usize) -> String {
         format!("{}{}", chunk_prefix, unit_prefixes[index])
     } else {
         match chunk_value {
-            0 => { return String::from(""); },
+            0 => { String::from("") },
             1..=9 => { get_common_prefix(chunk) }, 
             _ => { get_hundreds_prefix(chunk, true) },
         }
