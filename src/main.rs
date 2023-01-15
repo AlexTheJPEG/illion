@@ -11,12 +11,12 @@ fn biguint_in_range(num: &BigUint, start: &str, end: &str) -> bool {
     &str_to_biguint(start) <= num && num <= &str_to_biguint(end)
 }
 
-fn get_common_illion(num: String) -> String {
+fn get_common_prefix(num: String) -> String {
     let common_prefixes: [&str; 10] = ["", "mi", "bi", "tri", "quadri", "quinti", "sexti", "septi", "octi", "noni"];
     common_prefixes[num.parse::<usize>().unwrap()].to_string()
 }
 
-fn get_hundreds_illion(num: String, last_letter: bool) -> String {
+fn get_hundreds_prefix(num: String, last_letter: bool) -> String {
     let unit_prefixes: [&str; 10] = ["", "un", "duo", "tre", "quattuor", "quin", "se", "septe", "octo", "nove"];
     let ten_prefixes: [&str; 10] = ["", "deci", "viginti", "triginta", "quadraginta", "quinquaginta", "sexaginta", "septuaginta", "octoginta", "nonaginta"];
     let hundred_prefixes: [&str; 10] = ["", "centi", "ducenti", "trecenti", "quadringenti", "quingenti", "sescenti", "septingenti", "octingenti", "nongenti"];
@@ -49,9 +49,9 @@ fn get_illion(num: String) -> String {
     let big_num: BigUint = str_to_biguint(&num);
 
     if biguint_in_range(&big_num, "1", "9") {
-        return format!("{}illion", get_common_illion(num));
+        return format!("{}illion", get_common_prefix(num));
     } else if biguint_in_range(&big_num, "10", "999") {
-        return format!("{}illion", get_hundreds_illion(num, false));
+        return format!("{}illion", get_hundreds_prefix(num, false));
     }
 
     String::from("")
