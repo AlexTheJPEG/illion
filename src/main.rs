@@ -1,6 +1,12 @@
 use num::bigint::BigUint;
 use std::io;
 
+/* Sources:
+* https://googology.fandom.com/wiki/-illion
+* https://kyodaisuu.github.io/illion/
+* https://sites.google.com/site/pointlesslargenumberstuff/home/1/bowersillions
+* */
+
 /// Turns a string representation of a number to a BigUint
 fn str_to_biguint(str: &str) -> BigUint {
     BigUint::parse_bytes(str.as_bytes(), 10).unwrap()
@@ -61,16 +67,39 @@ fn get_chunk_tier_two_prefix(chunk: String, index: usize) -> String {
     let unit_prefixes: [&str; 20] = ["", "milli", "micro", "nano", "pico", "femto", "atto", "zepto", "yocto", "xono",
                                      "veco", "meco", "dueco", "treco", "tetreco", "penteco", "hexeco", "hepteco", "octeco", "enneco"];
 
-    let chunk_prefix: String;
+    let poly_unit_prefixes: [&str; 20] = ["", "me", "due", "trio", "tetre", "pente", "hexe", "hepte", "octe", "enne",
+                                          "vece", "mece", "duece", "trece", "tetrece", "pentece", "hexece", "heptece", "octece", "ennece"];
+    let ten_prefixes: [&str; 10] = ["", "", "icos", "triacont", "tetracont", "pentacont", "hexacont", "heptacont", "octacont", "ennacont"];
+    let hundred_prefixes: [&str; 10] = ["", "hect", "dohect", "triahect", "tetrahect", "pentahect", "hexahect", "heptahect", "octahect", "ennahect"];
+
+    let mut chunk_prefix: String;
     let chunk_value: u32 = chunk.parse().unwrap();
     
     if index != 0 {
+        let hundred: u32 = index as u32 / 100;
+        let ten: u32 = index as u32 / 10 % 10;
+        let unit: u32 = index as u32 % 10;
+
         match chunk_value {
             0 => { return String::from(""); },
             1..=9 => { chunk_prefix = String::from(base_prefixes[chunk_value as usize]); }, 
             _ => { chunk_prefix = get_hundreds_prefix(chunk.clone(), true); },
         }
-        format!("{}{}", chunk_prefix, unit_prefixes[index])
+
+        match ten {
+            0 | 1 => { chunk_prefix.push_str(unit_prefixes[(unit + (10 * ten)) as usize]); },
+            2..=9 => {
+                chunk_prefix.push_str(poly_unit_prefixes[unit as usize]);
+                chunk_prefix.push_str(ten_prefixes[ten as usize]);
+                chunk_prefix.push_str(if hundred == 0 { "o" } else { "e" });
+            }
+            _ => (),
+        }
+
+        chunk_prefix.push_str(hundred_prefixes[hundred as usize]);
+        chunk_prefix.push_str(if hundred != 0 { "o" } else { "" });
+
+        chunk_prefix
     } else {
         match chunk_value {
             0 => { String::from("") },
@@ -104,7 +133,7 @@ fn get_illion(num: String) -> String {
         return format!("{}llion", get_common_prefix(num));
     } else if biguint_in_range(&big_num, "10", "999") {
         return format!("{}illion", get_hundreds_prefix(num, false));
-    } else if biguint_in_range(&big_num, "1000", &"9".repeat(60)){
+    } else if biguint_in_range(&big_num, "1000", &"9".repeat(2703)){
         return format!("{}illion", get_entire_tier_two_prefix(num, false));
     }
 
