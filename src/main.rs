@@ -7,12 +7,12 @@ use std::io;
 * https://sites.google.com/site/pointlesslargenumberstuff/home/1/bowersillions
 * */
 
-/// Turns a string representation of a number to a BigUint
+// Turns a string representation of a number to a BigUint
 fn str_to_biguint(str: &str) -> BigUint {
     BigUint::parse_bytes(str.as_bytes(), 10).unwrap()
 }
 
-/// Determines if a BigUint is within a range of numbers
+// Determines if a BigUint is within a range of numbers
 fn biguint_in_range(num: &BigUint, start: &str, end: &str) -> bool {
     &str_to_biguint(start) <= num && num <= &str_to_biguint(end)
 }
@@ -125,7 +125,7 @@ fn get_entire_tier_two_prefix(num: String, last_letter: bool) -> String {
     entire_prefix[..entire_prefix.len() - (!last_letter as usize)].to_string()
 }
 
-/// Gets the num-th illion
+// Gets the num-th illion
 fn get_illion(num: String) -> String {
     let big_num: BigUint = str_to_biguint(&num);
 
