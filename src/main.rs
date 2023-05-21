@@ -154,10 +154,12 @@ fn main() {
 
         if input == "0" { break; }
 
-        if input.chars().all(|c| c.is_ascii_digit()) {
-            println!("{}\n", get_illion(input));
+        if input.chars().next() != Some('0') && input.chars().all(|c| c.is_ascii_digit()) {
+            println!("{}", get_illion(input));
         } else {
-            println!("Not a valid number\n");
+            println!("Not a valid number");
         }
+
+        println!();
     }
 }
