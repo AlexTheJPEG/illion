@@ -1,4 +1,3 @@
-use num::bigint::BigUint;
 use std::io;
 
 /* Sources:
@@ -6,16 +5,6 @@ use std::io;
 * https://kyodaisuu.github.io/illion/
 * https://sites.google.com/site/pointlesslargenumberstuff/home/1/bowersillions
 * */
-
-// Turns a string representation of a number to a BigUint
-fn str_to_biguint(str: &str) -> BigUint {
-    BigUint::parse_bytes(str.as_bytes(), 10).unwrap()
-}
-
-// Determines if a BigUint is within a range of numbers
-fn biguint_in_range(num: &BigUint, start: &str, end: &str) -> bool {
-    &str_to_biguint(start) <= num && num <= &str_to_biguint(end)
-}
 
 fn get_common_prefix(num: String) -> String {
     let common_prefixes: [&str; 10] = ["", "mi", "bi", "tri", "quadri", "quinti", "sexti", "septi", "octi", "noni"];
@@ -127,24 +116,19 @@ fn get_entire_tier_two_prefix(num: String, last_letter: bool) -> String {
 
 // Gets the num-th illion
 fn get_illion(num: String) -> String {
-    let big_num: BigUint = str_to_biguint(&num);
-
-    if biguint_in_range(&big_num, "1", "9") {
-        return format!("{}llion", get_common_prefix(num));
-    } else if biguint_in_range(&big_num, "10", "999") {
-        return format!("{}illion", get_hundreds_prefix(num, false));
-    } else if biguint_in_range(&big_num, "1000", &"9".repeat(2703)){
-        return format!("{}illion", get_entire_tier_two_prefix(num, false));
+    match num.len() {
+        1 => { return format!("{}llion", get_common_prefix(num)); },
+        2..=3 => { return format!("{}illion", get_hundreds_prefix(num, false)); },
+        4..=2703 => { return format!("{}illion", get_entire_tier_two_prefix(num, false)); }
+        _ => { return String::from(""); }
     }
-
-    String::from("")
 }
 
 fn main() {
     loop {
         println!("-illion number (type 0 to exit):");
 
-        let mut input = String::new();
+        let mut input: String = String::new();
         io::stdin().read_line(&mut input).expect("Failed to read input");
         input = input.trim().to_string();
 
