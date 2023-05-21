@@ -135,12 +135,16 @@ fn get_tier_two_prefix(num: String, last_letter: bool) -> String {
 }
 
 // Gets the num-th illion
-fn get_illion(num: String) -> String {
+fn get_illion(num: String) -> Result<String, String> {
+    if num.chars().next() == Some('0') || num.chars().any(|c| !c.is_ascii_digit()) {
+        return Err("Not a valid number".to_string());
+    }
+
     match num.len() {
-        1        => { return format!("{}llion", get_common_prefix(num)); },
-        2..=3    => { return format!("{}illion", get_tier_one_prefix(num, false)); },
-        4..=2703 => { return format!("{}illion", get_tier_two_prefix(num, false)); }
-        _        => { return String::from(""); }
+        1        => { Ok(format!("{}llion", get_common_prefix(num))) },
+        2..=3    => { Ok(format!("{}illion", get_tier_one_prefix(num, false))) },
+        4..=2703 => { Ok(format!("{}illion", get_tier_two_prefix(num, false))) }
+        _        => { Ok(String::from("")) }
     }
 }
 
@@ -154,10 +158,9 @@ fn main() {
 
         if input == "0" { break; }
 
-        if input.chars().next() != Some('0') && input.chars().all(|c| c.is_ascii_digit()) {
-            println!("{}", get_illion(input));
-        } else {
-            println!("Not a valid number");
+        match get_illion(input) {
+            Ok(illion) => { println!("{}", illion); }
+            Err(e)     => { println!("{}", e); }
         }
 
         println!();
